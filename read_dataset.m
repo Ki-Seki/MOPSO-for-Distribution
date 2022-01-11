@@ -21,7 +21,7 @@ function field = read_dataset(dataset)
     
     datatext = fileread([dataset '.txt']);  % 读取数据集文件为字符串
     
-    field.DATASET = str2num(extract_value(datatext, field_name, 1));
+    field.DATASET = extract_value(datatext, field_name, 1);
     field.NODE_COUNT = str2num(extract_value(datatext, field_name, 2));
     field.NODE = str2num(extract_value(datatext, field_name, 3));
     field.EDGE_COUNT = str2num(extract_value(datatext, field_name, 4));
