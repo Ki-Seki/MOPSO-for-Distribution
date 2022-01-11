@@ -2,6 +2,7 @@
 function field = read_dataset(dataset)
     % dataset 数据集的名称，不含后缀 .txt
     % field 返回值，包含提取出来的数据值
+    
     field_name = {  % 数据集的各字段名
         'DATASET: '
         'NODE_COUNT: '
@@ -17,10 +18,10 @@ function field = read_dataset(dataset)
         'DEMAND: '
         'RISK_MATRIX: '
         'EOF'};
+    
     datatext = fileread([dataset '.txt']);  % 读取数据集文件为字符串
     
-    %% 提取过程
-    
+    field.DATASET = str2num(extract_value(datatext, field_name, 1));
     field.NODE_COUNT = str2num(extract_value(datatext, field_name, 2));
     field.NODE = str2num(extract_value(datatext, field_name, 3));
     field.EDGE_COUNT = str2num(extract_value(datatext, field_name, 4));
