@@ -8,6 +8,12 @@
 % 函数名后加一下划线表示重载的函数
 % VRP 问题背景下，适应度值即为路径长度、成本等，适应度越小越好
 % 适应度均用矩阵表示，以增强程序通用性
+% 邻接矩阵的下标从配送原点开始算起
+
+% 程序约束
+% 数据集中车载重必须大于单一需求点需求量，否则程序出现 BUG
+% 需求点需求量必须是正数，否则程序出现 BUG
+% 需求点至少有一个，否则程序出现 BUG
 
 % 待完善 or 待优化
 % 弗洛伊德算法：可继续优化
@@ -39,14 +45,14 @@ coeff_z = 0.05;  % 目标 Z 的权重
 
 field = read_dataset(dataset);  % 读数据集到 field 结构体，它包含数据集中所有字段值
 matrix = floyd_algo(field.NODE, field.EDGE);  % 用弗洛伊德算法求邻接矩阵
-particle = zeros(particle_cnt, field.NODE_COUNT);  % 创建粒子种群
+particle = zeros(particle_cnt, field.NODE_COUNT-1);  % 创建粒子种群
 
 % 为每个粒子生成随机的路径序列
 for i = 1 : particle_cnt
-    particle(i, :) = randperm(field.NODE_COUNT);
+    particle(i, :) = randperm(field.NODE_COUNT-1);
 end
 
-fit = fitness(particle, field);  % 适应度是一个两列（T 和 Z）的矩阵
+fit = fitness(particle, field, matrix);  % 适应度是一个两列（T 和 Z）的矩阵
 [~, index] = min_(fit, coeff_t, coeff_z);  % 使用重载函数找最优值
 p_best = particle;  % 个体最优对应的粒子群
 g_best = particle(index, :);  % 全局最优对应的粒子
