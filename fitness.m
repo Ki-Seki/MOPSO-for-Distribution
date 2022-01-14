@@ -5,7 +5,9 @@ function fit = fitness(particle, field, matrix)
     % matrix 邻接矩阵
     % fit 适应度矩阵，每行表示一个粒子的适应度，包含 T 总时间和 Z 总成本两个元素
 
-    [m, n] = size(particle);
+    [m, n] = size(particle);  % 粒子个数 需求点个数
+    fit = zeros(m, 2);  % 返回值
+    
     for i = 1 : m  % 遍历每一个粒子
         
         p = particle(i, :);  % 当前粒子
@@ -26,61 +28,37 @@ function fit = fitness(particle, field, matrix)
             load = load + demand;  % 增加载重
         end
         
-        %% 计算总运距
+        %% 计算总运距和总消杀成本
         
         d = 0;  % 总运距
+        r = 0;  % 总消杀次数
         st = 1;  % 某辆车起始服务点，p(st) 是服务点编号
         for j = 1 : k  % 遍历每一辆车
+            ed = st + vehicle(j) - 1;  % 某辆车终止服务点，p(ed) 是服务点编号
             
             % 注意：下面常出现 p()，一般要令其 +1，是因为 matrix 是包括原点的
             
-            ed = st + vehicle(j) - 1;  % 某辆车终止服务点，p(ed) 是服务点编号
-            d = d + matrix(1, p(st)+1);  %  加上原点到第一服务点距离
-            for l = st+1 : ed
+            d = d + matrix(1, p(st)+1);  % 加上原点到第一服务点距离
+            r = r + field.RISK_MATRIX(1, p(st)+1);  % 加上原点到第一服务点的风险
+            for l = st+1 : ed  % 遍历第 j 辆车服务的需求点
                 d = d + matrix(p(l-1)+1, p(l)+1);
+                r = r + field.RISK_MATRIX(p(l-1)+1, p(l)+1);
             end
-            d = d + matrix(p(ed)+1, 1);  %  加上最后服务点到原点距离
+            d = d + matrix(p(ed)+1, 1);  % 加上最后服务点到原点距离
+            r = r + field.RISK_MATRIX(p(ed)+1, 1);  % 加上最后服务点到原点风险
+            
             st = ed + 1;  % 更新 st
         end
         
-        disp(d);
+        %% 计算当前粒子的总时间和总成本
         
-        %{
-        d = 0;  % 总距离
-        now_p = [0, p(i, :)];  % 补充配送原点为 0 到当前粒子，方便后续循环
-        load = 0;  % 载重
-        vehicle = 0;  % 车辆使用数量
+        t = d / field.VEHICLE_VELOCITY;  % 小时
+        z = d * field.VEHICLE_SHIPPING_COST + ...
+            k * field.VEHICLE_FIXED_COST + ...
+            r * field.VEHICLE_DISINFECTION_COST;  % 元
         
-        for j = 2 : n+1  % 遍历每一个需求点，其编号为 now_p(j)
-            demand = field.DEMAND(now_p(j), 2);  % 需求点需求量
-            if load + demand <= field.VEHICLE_CAPACITY  % 若车载重仍可以满足当前需求点
-                if load == 0  % 若是当前车辆运送的第一个需求点
-                    d = d + matrix(1, now_p(j));  % 添加原点到此车第一个服务点距离
-                else
-                    d = d + matrix(now_p(j-1), now_p(j));  % 添加上服务点到此服务点距离
-                end
-                
-                load = load + demand;
-            elseif load + demand > field.VEHICLE_CAPACITY  % 若需加车以服务此需求点
-                d = d + matrix(now_p(j-1), 1);  % 换车前，总距离加上上辆车回原点的距离
-                vehicle = vehicle + 1;  % 上量车计入车辆总数
-                load = 0;  % 新车载重清零
-                d = d + matrix(1, now_p(j));  % 添加原点到此车第一个服务点距离
-            end
-            
-            if load > 0
-                vehicle = vehicle + 1;
-            end
-        end
+        %% 将当前粒子的总时间与总成本代入适应度矩阵
         
-        t = d / field.VEHICLE_VELOCITY;  % 计算总运送时间
-        z = z1 + z2 + z3;  % 计算总成本
-        %}
+        fit(i, :) = [t, z];
     end
-    
-    
-    % 以下是占位数据用于临时测试
-    T = rand(size(p, 1), 1);
-    Z = rand(size(p, 1), 1);
-    fit = [T, Z];
 end
