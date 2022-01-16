@@ -19,9 +19,10 @@
 % 弗洛伊德算法：可继续优化
 % 速度表示：暂时采用随机方法
 % 适应度排序：暂时采用加权方法
+% fitness 函数：性能优化，流程优化等
 
 % TODO
-% fitness 函数
+% 制作测试数据集来测试 fitness.m：测试到该弗洛伊德函数
 
 clear;
 clc;
@@ -44,6 +45,7 @@ coeff_z = 0.05;  % 目标 Z 的权重
 %% 初始化
 
 field = read_dataset(dataset);  % 读数据集到 field 结构体，它包含数据集中所有字段值
+draw_net(field);  % 绘制结点网络图
 matrix = floyd_algo(field.NODE, field.EDGE);  % 用弗洛伊德算法求邻接矩阵
 particle = zeros(particle_cnt, field.NODE_COUNT-1);  % 创建粒子种群
 
@@ -60,6 +62,7 @@ p_best_fit = fit;  % 个体最优值
 g_best_fit = fit(index, :);  % 全局最优值
 
 %% 程序核心循环
+
 for i = 1 : loop_cnt
     % TODO
 end
