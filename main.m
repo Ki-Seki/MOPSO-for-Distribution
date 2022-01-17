@@ -22,13 +22,16 @@
 % fitness 函数：性能优化，流程优化等
 
 % TODO
-% 制作测试数据集来测试 fitness.m：测试到该弗洛伊德函数
+% 绘制粒子的图，以直观的表现一个粒子
 
 clear;
 clc;
 close all;
 
 %% 参数设置
+
+rand_type = 'state';  % 随机数类型
+rand_seed = 1;  % 随机数种子
 
 dataset = 'example';  % 数据集名称
 
@@ -44,6 +47,7 @@ coeff_z = 0.05;  % 目标 Z 的权重
 
 %% 初始化
 
+rand(rand_type, rand_seed);
 field = read_dataset(dataset);  % 读数据集到 field 结构体，它包含数据集中所有字段值
 draw_net(field);  % 绘制结点网络图
 matrix = floyd_algo(field.NODE, field.EDGE);  % 用弗洛伊德算法求邻接矩阵
