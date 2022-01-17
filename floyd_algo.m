@@ -32,9 +32,9 @@ function matrix = floyd_algo(node, edge)
     
     %% 弗洛伊德算法
     
-    for i = 1 : node_cnt
-        for j = 1 : node_cnt
-            for k = 1 : node_cnt
+    for k = 1 : node_cnt  % 遍历所有中介点
+        for i = 1 : node_cnt
+            for j = 1 : node_cnt
                 if (matrix(i, k) ~= Inf && matrix(k, j) ~= Inf && ...
                         matrix(i, k) + matrix(k, j) < matrix(i, j))
                     matrix(i, j) = matrix(i, k) + matrix(k, j);  % 松弛操作
