@@ -13,7 +13,10 @@ function draw_net(field)
     for i = 1 : field.NODE_COUNT
         x = node(i, 2);  % 横坐标
         y = node(i, 3);  % 纵坐标
-        label = [num2str(i-1) ' (' num2str(x) ',' num2str(y) ')'];  % 结点标签
+        label = [num2str(i-1) ' (' num2str(x) ',' num2str(y) ') '];  % 结点标签
+        if i > 1  % 如果是需求点
+            label = [label num2str(field.DEMAND(i-1,2))];  % 结点标签加上需求量
+        end
         offset = 3;  % 防止标签被 marker 挡住
         text(x+offset, y+offset, label);  % 写标签
     end
@@ -35,5 +38,5 @@ function draw_net(field)
     xlabel('横坐标（千米）');
     ylabel('纵坐标（千米）');
     title('结点网络图');
-    legend('结点' ,'边');
+    legend('结点（编号、坐标、需求量）' ,'边');
 end
