@@ -1,7 +1,15 @@
 % 用优化粒子群算法解决带有风险矩阵的 TSP 问题
 
-% 运行环境
-% 
+% -*- coding: utf-8 -*-
+% @Time: 
+% @Author: Song Shichao
+% @Email: Ki_Seki@outlook.com
+% @Software: Matlab R2015b
+% @Platform: Windows11 64x 21H2
+% @CPU: Intel(R) Core(TM) i5-10210U CPU @ 1.60GHz   2.11 GHz
+% @RAM: 16.0 GB
+% @Description: This code is a part of a HUEL master degree 
+%               project under the protect of GPL-3.0-only license.
 
 % 算法特色
 % 风险矩阵、偏移速度表示方法、多目标适应度函数
@@ -22,12 +30,10 @@
 
 % 待完善 or 待优化
 % 弗洛伊德算法：可继续优化
-% 速度表示：暂时采用随机方法
+% 速度表示：暂时采用标准 PSO + 合法化方法
 % 适应度排序：暂时采用加权方法
 % fitness 函数：性能优化，流程优化等
-
-% TODO
-% 绘制粒子的图，以直观的表现一个粒子
+% draw_distribution 函数：流程性优化
 
 clear;
 clc;
@@ -55,7 +61,6 @@ coeff.z = 0.05;  % 目标 Z 的权重
 rand(rand_type, rand_seed);  % 随机数生成器初始化
 convergence = 0;  % 收敛时的迭代次数
 field = read_dataset(dataset);  % 读数据集到 field 结构体，它包含数据集中所有字段值
-figure(1);
 draw_net(field);  % 绘制结点网络图
 
 matrix = floyd_algo(field.NODE, field.EDGE);  % 用弗洛伊德算法求邻接矩阵
@@ -74,7 +79,7 @@ g_best_fit = fit(index, :);  % 全局最优值
 
 %% 粒子群算法核心循环
 
-figure(2);
+figure('Name','PSO 收敛过程','NumberTitle','off')
 for i = 1 : loop_cnt
     for j = 1 : particle_cnt
         %% 计算速度与位置
@@ -108,23 +113,24 @@ for i = 1 : loop_cnt
     
     %% 绘图
     
-    disp(weighted(g_best_fit, coeff));
-    disp(g_best);
-    %disp(p_best(1, :));
-    plot(i, weighted(g_best_fit, coeff), '.r');
+    plot(i, weighted(g_best_fit, coeff), '*r');
     hold on;
 end
 
-%% 绘图
-
-% 结束收敛过程的绘图
+%% 结束收敛过程的绘图
 title(['PSO 收敛过程（数据集：', dataset, '）']);
 xlabel('迭代次数');
 ylabel('加权适应度值');
 hold off;
 
-% 绘制最优配送安排
-% TODO
+%% 输出最佳结果
 
-%% 输出最佳结果的相关数据
-disp(convergence);
+[fit, vehicle, dist, risk] = fitness(g_best, field, matrix);
+draw_distribution(g_best, vehicle, field);  % 绘制最佳配送方案
+fprintf('PSO 收敛于第 %d 次迭代\n', convergence);
+fprintf('最优粒子为：%s\n', mat2str(g_best));
+fprintf('每辆车服务需求点个数：%s\n', mat2str(vehicle{1}));
+fprintf('总运输距离：%.6f 千米\n', dist);
+fprintf('消杀次数：%d 次\n', risk);
+fprintf('总运输时长 T = %.6f 小时\n', fit(1));
+fprintf('总成本 Z = %.6f 元\n', fit(2));
