@@ -37,6 +37,6 @@ function draw_net(field)
     
     xlabel('横坐标（千米）');
     ylabel('纵坐标（千米）');
-    title('结点网络图');
+    title(['结点网络图（数据集：', field.DATASET, '）']);
     legend('结点（编号、坐标、需求量）' ,'边');
 end
