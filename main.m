@@ -22,6 +22,7 @@
 % 邻接矩阵的下标从配送原点开始算起
 % min_.m 函数暂时未使用
 % is_le.m 函数暂时未使用
+% draw_distribution_in_subplot.m 需在命令行调用
 
 % 程序约束
 % 数据集中车载重必须大于单一需求点需求量，否则程序出现 BUG
@@ -47,8 +48,7 @@ rand_seed = 1;  % 随机数种子
 dataset = 'example';  % 数据集名称
 
 loop_cnt = 60;  % 进化次数
-particle_cnt = 3;  % 个体数目
-
+particle_cnt = 3;  % 粒子数目
 w = 1.5;  % 惯性权重
 c1 = 4;  % 自我学习因子
 c2 = 4;  % 群体学习因子
@@ -118,6 +118,7 @@ for i = 1 : loop_cnt
 end
 
 %% 结束收敛过程的绘图
+
 title(['PSO 收敛过程（数据集：', dataset, '）']);
 xlabel('迭代次数');
 ylabel('加权适应度值');
@@ -129,6 +130,7 @@ hold off;
 draw_distribution(g_best, vehicle, field);  % 绘制最佳配送方案
 fprintf('PSO 收敛于第 %d 次迭代\n', convergence);
 fprintf('最优粒子为：%s\n', mat2str(g_best));
+fprintf('共需 %d 辆车\n', size(vehicle{1}, 2));
 fprintf('每辆车服务需求点个数：%s\n', mat2str(vehicle{1}));
 fprintf('总运输距离：%.6f 千米\n', dist);
 fprintf('消杀次数：%d 次\n', risk);

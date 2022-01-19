@@ -4,25 +4,6 @@ function draw_distribution(p, v, field)
     % v 车辆配送方案，元胞数组
     % field 数据集
     
-    % 如果说众多的子图可以放在一张图中，就用子图来绘制
-    v_cnt = size(v{1}, 2);
-    if     v_cnt <= 1 * 1
-        draw_distribution_in_subplot(p, v, field, 1, 1)
-        return;
-    elseif v_cnt <= 1 * 2
-        draw_distribution_in_subplot(p, v, field, 1, 2)
-        return;
-    elseif v_cnt <= 2 * 2
-        draw_distribution_in_subplot(p, v, field, 2, 2)
-        return;
-    elseif v_cnt <= 2 * 3
-        draw_distribution_in_subplot(p, v, field, 2, 3)
-        return;
-    elseif v_cnt <= 3 * 3
-        draw_distribution_in_subplot(p, v, field, 3, 3)
-        return;
-    end
-    
     v = v{1};  % 提取需要的部分
     g = graph(create_matrix(field.NODE, field.EDGE, 0));  % 创建图对象
     st = 1;  % 某辆车起始服务点，p(st) 是服务点编号
@@ -93,7 +74,7 @@ function draw_distribution(p, v, field)
         title(['第' num2str(i) '辆车配送路径（数据集：' field.DATASET '）']);
         xlabel('横坐标（千米）');
         ylabel('纵坐标（千米）');
-        legend('途径点', '需求点', ['路径：' txt_path]);
+        legend('途径点（编号、坐标、需求量）', '需求点（编号、坐标、需求量）', ['路径：' txt_path]);
         hold off;
         
         %% 更新 st
