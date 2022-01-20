@@ -1,4 +1,4 @@
-% 绘制某个粒子代表的配送方案，将每辆车的配送路径放在一张图中
+% 绘制某个粒子代表的配送方案，将每辆车的配送方案图放在一张大图中
 function draw_distribution_in_subplot(p, v, field, row, col)
     % p 最优粒子
     % v 车辆配送方案，元胞数组
@@ -6,7 +6,7 @@ function draw_distribution_in_subplot(p, v, field, row, col)
     % row 子图网格划分时的行数
     % col 子图网格划分时的列数
     
-    figure('Name','配送方案','NumberTitle','off');
+    figure('Name','配送方案图','NumberTitle','off');
     v = v{1};  % 提取需要的部分
     g = graph(create_matrix(field.NODE, field.EDGE, 0));  % 创建图对象
     
@@ -72,7 +72,7 @@ function draw_distribution_in_subplot(p, v, field, row, col)
             Y(j) = field.NODE(full_path(j), 3);
         end
         plot(X, Y, '-r');
-        title(['第' num2str(i) '辆车配送路径（数据集：' field.DATASET '）']);
+        title(['第' num2str(i) '辆车配送方案图（数据集：' field.DATASET '）']);
         xlabel('横坐标（千米）');
         ylabel('纵坐标（千米）');
         legend('途径点', '需求点', ['路径：' txt_path]);

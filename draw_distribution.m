@@ -44,7 +44,7 @@ function draw_distribution(p, v, field)
         
         %%  绘图
         
-        figure('Name',['第' num2str(i) '辆车配送路径'],'NumberTitle','off');
+        figure('Name',['第' num2str(i) '辆车配送方案图'],'NumberTitle','off');
         
         % 绘制散点图
         scatter(field.NODE(:,2), field.NODE(:,3), 'b');
@@ -71,10 +71,10 @@ function draw_distribution(p, v, field)
             Y(j) = field.NODE(full_path(j), 3);
         end
         plot(X, Y, '-r');
-        title(['第' num2str(i) '辆车配送路径（数据集：' field.DATASET '）']);
+        title(['第' num2str(i) '辆车配送方案图（数据集：' field.DATASET '）']);
         xlabel('横坐标（千米）');
         ylabel('纵坐标（千米）');
-        legend('途径点（编号、坐标、需求量）', '需求点（编号、坐标、需求量）', ['路径：' txt_path]);
+        legend('途径点（编号 坐标 需求量）', '服务点（编号 坐标 需求量）', ['路径：' txt_path]);
         hold off;
         
         %% 更新 st
