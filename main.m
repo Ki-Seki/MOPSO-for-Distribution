@@ -1,18 +1,19 @@
 % 用优化粒子群算法解决带有风险矩阵的 TSP 问题
 
 % -*- coding: utf-8 -*-
-% @Time: 
+% @Time: 2022/01/20 12:03
 % @Author: Song Shichao
 % @Email: Ki_Seki@outlook.com
 % @Software: Matlab R2015b
 % @Platform: Windows11 64x 21H2
 % @CPU: Intel(R) Core(TM) i5-10210U CPU @ 1.60GHz   2.11 GHz
 % @RAM: 16.0 GB
-% @Description: This code is a part of a HUEL master degree 
-%               project under the protect of GPL-3.0-only license.
+% @Notice: This code is a part of a HUEL master degree project 
+%          under the protection of GPL-3.0-only license.
+% @Link: https://github.com/Ki-Seki/MATLAB/tree/master/006
 
 % 算法特色
-% 风险矩阵、偏移速度表示方法、多目标适应度函数
+% 风险矩阵、多目标适应度函数、偏移速度表示方法
 
 % 注意事项
 % 结点从 0 开始编号，但是 MATLAB 是从 1 开始编号的
@@ -20,17 +21,9 @@
 % VRP 问题背景下，适应度值即为路径长度、成本等，适应度越小越好
 % 适应度均用矩阵表示，以增强程序通用性
 % 邻接矩阵的下标从配送原点开始算起
-% min_.m 函数暂时未使用
-% is_le.m 函数暂时未使用
 % draw_distribution_in_subplot.m 需在命令行调用
 
-% 程序约束
-% 数据集中车载重必须大于单一需求点需求量，否则程序出现 BUG
-% 需求点需求量必须是正数，否则程序出现 BUG
-% 需求点至少有一个，否则程序出现 BUG
-
 % 待完善 or 待优化
-% 弗洛伊德算法：可继续优化
 % 速度表示：暂时采用标准 PSO + 合法化方法
 % 适应度排序：暂时采用加权方法
 % fitness 函数：性能优化，流程优化等
@@ -76,10 +69,10 @@ p_best = particle;  % 个体最优对应的粒子群
 g_best = particle(index, :);  % 全局最优对应的粒子
 p_best_fit = fit;  % 个体最优值
 g_best_fit = fit(index, :);  % 全局最优值
+best_history = zeros(1, loop_cnt);  % 历次迭代的全局最优的适应度值
 
 %% 粒子群算法核心循环
 
-figure('Name','PSO 收敛过程','NumberTitle','off')
 for i = 1 : loop_cnt
     for j = 1 : particle_cnt
         %% 计算速度与位置
@@ -111,23 +104,18 @@ for i = 1 : loop_cnt
         convergence = i;  % 更新收敛时的迭代次数
     end
     
-    %% 绘图
+    %% 保存结果
     
-    plot(i, weighted(g_best_fit, coeff), '*r');
-    hold on;
+    best_history(i) = weighted(g_best_fit, coeff);
 end
 
-%% 结束收敛过程的绘图
+%% 输出
 
-title(['PSO 收敛过程（数据集：', dataset, '）']);
-xlabel('迭代次数');
-ylabel('加权适应度值');
-hold off;
-
-%% 输出最佳结果
+draw_convergence(best_history, convergence, field);  % 绘制收敛过程图
 
 [fit, vehicle, dist, risk] = fitness(g_best, field, matrix);
-draw_distribution(g_best, vehicle, field);  % 绘制最佳配送方案
+draw_distribution(g_best, vehicle, field);  % 绘制最佳配送方案图
+
 fprintf('PSO 收敛于第 %d 次迭代\n', convergence);
 fprintf('最优粒子为：%s\n', mat2str(g_best));
 fprintf('共需 %d 辆车\n', size(vehicle{1}, 2));

@@ -1,5 +1,4 @@
 % 用弗洛伊德算法求邻接矩阵
-% 此函数可继续优化性能，即可以仅计算上三角矩阵，但暂不优化，待性能不够时再优化
 function matrix = floyd_algo(node, edge)
     % node 点集
     % edge 边集
