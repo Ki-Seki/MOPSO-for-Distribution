@@ -1,7 +1,7 @@
 % 用弗洛伊德算法求邻接矩阵
 function matrix = floyd_algo(node, edge)
-    % node 点集
-    % edge 边集
+    % node 点集，三列（结点编号，横坐标，纵坐标）的矩阵
+    % edge 边集，两列（起点，终点）的矩阵
     % matrix 邻接矩阵
     
     node_cnt = size(node, 1);

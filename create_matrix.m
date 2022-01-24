@@ -3,6 +3,7 @@ function m = create_matrix(n, e, default)
     % n 结点集，三列（结点编号，横坐标，纵坐标）的矩阵
     % e 边集，两列（起点，终点）的矩阵
     % default 用 0 还是 Inf 来填充无边相连的点
+    % m 邻接矩阵
     
     n_cnt = size(n, 1);
     e_cnt = size(e, 1);
