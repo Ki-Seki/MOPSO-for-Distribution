@@ -38,10 +38,10 @@ close all;
 rand_type = 'state';  % 随机数类型
 rand_seed = 1;  % 随机数种子
 
-dataset = 'a7';  % 数据集名称
+dataset = 'c21';  % 数据集名称
 
-loop_cnt = 60;  % 进化次数
-particle_cnt = 3;  % 粒子数目
+loop_cnt = 1000;  % 进化次数
+particle_cnt = 300;  % 粒子数目
 w = 1.5;  % 惯性权重
 c1 = 4;  % 自我学习因子
 c2 = 4;  % 群体学习因子
