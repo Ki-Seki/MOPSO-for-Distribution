@@ -1,4 +1,4 @@
-DATASET: a7
+DATASET: example
 NODE_COUNT: 7
 NODE: 
 0 345 184

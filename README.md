@@ -14,9 +14,13 @@ This code is a part of a HUEL master degree project under the protection of GPL-
 4. 在命令行窗口查看输出，在图片窗口中查看输出的图表
 5. 最后可在命令行窗口单独运行 draw_distribution_in_subplot 函数，以绘制所有车辆配送方案在同一版面的图
 
+## 数据集
+
+网上并无现成的数据集，需要自己制作数据集。本文件夹提供了三个数据集，其文件名分别为：`example.txt`, `b50.txt`, `c21.txt`。`example.txt` 是一个示例测试数据集，仅有 7 个结点。其他两个数据集后缀的数字均为其中结点数量。接下来的小节会详细介绍 `example.txt`
+
 ## example.txt 的说明
 
-example.txt 是一个测试数据集。其中的数据均为随机生成的。其特点是数据量比较小，仅有 7 个结点，7 条边。这就方便了用 example.txt 进行测试。下面包含一些手算的结果，方便测试：
+`example.txt` 是一个测试数据集。其中的数据均为随机生成的。其特点是数据量比较小，仅有 7 个结点，7 条边。这就方便了用 `example.txt` 进行测试。下面包含一些手算的结果，方便测试：
 
 ### example.txt 文件内容
 
