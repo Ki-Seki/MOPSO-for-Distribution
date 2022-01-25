@@ -42,7 +42,7 @@ function draw_net(field)
     
     g = graph(create_matrix(field.NODE, field.EDGE, 0));
     figure('Name','结点网络拓扑图','NumberTitle','off')
-    plot(g, 'NodeLabel', 0:6, 'EdgeLabel', g.Edges.Weight);
+    plot(g, 'NodeLabel', 0:field.NODE_COUNT-1, 'EdgeLabel', g.Edges.Weight);
     title(['结点网络拓扑图（数据集：', field.DATASET, '）']);
     set(gca,'xtick',[],'xticklabel',[]);  % 隐藏坐标轴，因为无实际含义，下同
     set(gca,'ytick',[],'yticklabel',[]);

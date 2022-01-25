@@ -38,7 +38,7 @@ close all;
 rand_type = 'state';  % 随机数类型
 rand_seed = 1;  % 随机数种子
 
-dataset = 'example';  % 数据集名称
+dataset = 'a7';  % 数据集名称
 
 loop_cnt = 60;  % 进化次数
 particle_cnt = 3;  % 粒子数目
@@ -116,6 +116,7 @@ draw_convergence(best_history, convergence, field);  % 绘制收敛过程图
 [fit, vehicle, dist, risk] = fitness(g_best, field, matrix);
 draw_distribution(g_best, vehicle, field);  % 绘制最佳配送方案图
 
+fprintf('对数据集 %s 的计算结果如下：\n', dataset)
 fprintf('PSO 收敛于第 %d 次迭代\n', convergence);
 fprintf('最优粒子为：%s\n', mat2str(g_best));
 fprintf('共需 %d 辆车\n', size(vehicle{1}, 2));
