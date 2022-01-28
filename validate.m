@@ -8,7 +8,7 @@ function [v, x] = validate(v, x)
     M = max(x);
     
     x_old = x - v;
-    x_new = (1-n) / (m-M) * (x-M) + n;  % 坐标变换：[m, M] → [1, n]
+    x_new = (n-1) / (M-m) * (x-m) + 1;  % 坐标变换：[m, M] → [1, n]
     x_new = round(x_new);  % 变换为整数
     x_new = reorganize(x_new);  % 熨平粒子
     
