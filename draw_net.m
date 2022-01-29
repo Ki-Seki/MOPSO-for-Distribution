@@ -1,6 +1,7 @@
 % 绘制结点网络图
-function draw_net(field)
+function draw_net(field, graph_option)
     % field 数据集
+    % graph_option 绘图选项，定义在 main.m 中
     
     node = field.NODE;
     
@@ -21,22 +22,29 @@ function draw_net(field)
         text(x+offset, y+offset, label);  % 写标签
     end
     
-    % 添加边
-    hold on;
-    for i = 1 : field.EDGE_COUNT
-        n1 = field.EDGE(i, 1) + 1;  % 起始点编号
-        n2 = field.EDGE(i, 2) + 1;  % 结束点编号
-        x = [node(n1,2), node(n2,2)];
-        y = [node(n1,3), node(n2,3)];
-        plot(x, y, 'red');  % 连接两个点
+    % 如果要求详细绘图，添加边
+    if graph_option.detail == true
+        hold on;
+        for i = 1 : field.EDGE_COUNT
+            n1 = field.EDGE(i, 1) + 1;  % 起始点编号
+            n2 = field.EDGE(i, 2) + 1;  % 结束点编号
+            x = [node(n1,2), node(n2,2)];
+            y = [node(n1,3), node(n2,3)];
+            plot(x, y, 'red');  % 连接两个点
+        end
+        hold off;
     end
-    hold off;
+    
     
     % 添加说明
     xlabel('横坐标（千米）');
     ylabel('纵坐标（千米）');
     title(['结点网络路径图（数据集：', field.DATASET, '）']);
-    legend('结点（编号 坐标 需求量）' ,'边');
+    if graph_option.detail == true
+        legend('结点（编号 坐标 需求量）' ,'边');
+    else
+        legend('结点（编号 坐标 需求量）');
+    end
     
     %% 结点网络拓扑图
     

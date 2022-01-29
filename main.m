@@ -13,7 +13,11 @@
 % @Link: https://github.com/Ki-Seki/MATLAB/tree/master/006
 
 % 算法特色
-% 风险矩阵、多目标适应度函数、适应度矩阵、速度平滑化方法、帕累托最优解
+% 风险矩阵、多目标适应度函数、适应度矩阵、速度位置的重编码、帕累托最优解
+
+% 算法的输入与输出
+% 输入：在“参设设置”节
+% 输出：命令行输出结果、结点网络路径图、结点网络拓扑图、PSO 收敛过程图、每辆车的配送路径图
 
 % 注意事项
 % 结点从 0 开始编号，但是 MATLAB 是从 1 开始编号的
@@ -21,6 +25,7 @@
 % 邻接矩阵、风险矩阵的下标从配送原点开始算起
 
 % TODO
+% 该 [~, index] = min(weighted(fit, coeff));  % 找群体最优值对应下标
 % 适应度排序：采用帕累托占优方法
 % fitness 函数：性能优化，流程优化等
 % draw_distribution 函数：流程性优化；规定参数控制一张图片放几辆车的图
@@ -36,21 +41,21 @@ rand_seed = 1;  % 随机数种子
 
 dataset = 'c21';  % 数据集名称
 
-loop_cnt = 1000;  % 进化次数
-particle_cnt = 300;  % 粒子数目
+loop_cnt = 100;  % 进化次数
+particle_cnt = 30;  % 粒子数目
 w = 1.5;  % 惯性权重
 c1 = 4;  % 自我学习因子
 c2 = 4;  % 群体学习因子
 
-coeff.t = 0.95;  % 目标 T 的权重
-coeff.z = 0.05;  % 目标 Z 的权重
+graph_option.detail = true;  % 是否在所有输出的图中显示详细信息
+graph_option.distrib_cnt = 2;  % 一张图中绘制多少辆车的配送方案（合法值：1，2，4，6）
 
 %% 初始化
 
 rand(rand_type, rand_seed);  % 随机数生成器初始化
 convergence = 0;  % 收敛时的迭代次数
 field = read_dataset(dataset);  % 读数据集到 field 结构体，它包含数据集中所有字段值
-draw_net(field);  % 绘制结点网络图
+draw_net(field, graph_option);  % 绘制结点网络图
 
 matrix = floyd_algo(field.NODE, field.EDGE);  % 用弗洛伊德算法求邻接矩阵
 particle = zeros(particle_cnt, field.NODE_COUNT-1);  % 创建粒子种群
