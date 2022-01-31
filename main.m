@@ -1,9 +1,9 @@
-% 用优化粒子群算法解决带有风险矩阵的 TSP 问题
+% 用改进后的多目标粒子群优化（MOPSO）算法解决带有风险矩阵的多辆车配送旅行商问题（TSP）
 
 % -*- coding: utf-8 -*-
-% @Time: 2022/01/20 12:03
+% @Time: 
 % @Author: Song Shichao
-% @Email: Ki_Seki@outlook.com
+% @Email: song.shichao@outlook.com
 % @Software: Matlab R2015b
 % @Platform: Windows11 64x 21H2
 % @CPU: Intel(R) Core(TM) i5-10210U CPU @ 1.60GHz   2.11 GHz
@@ -13,7 +13,7 @@
 % @Link: https://github.com/Ki-Seki/MATLAB/tree/master/006
 
 % 算法特色
-% 风险矩阵、多目标适应度函数、适应度矩阵、速度位置的重编码、帕累托最优解
+% 多目标粒子群优化（MOPSO）、风险矩阵、适应度矩阵、速度与位置的重编码、帕累托前沿
 
 % 算法的输入与输出
 % 输入：在“参设设置”节
@@ -21,10 +21,11 @@
 
 % 注意事项
 % 结点从 0 开始编号，但是 MATLAB 是从 1 开始编号的
-% VRP 问题背景下，适应度值即为路径长度、成本等，适应度越小越好
-% 邻接矩阵、风险矩阵的下标从配送原点开始算起
+% TSP 背景下，适应度值即为路径长度、成本等，适应度值越小越好
+% 邻接矩阵、风险矩阵的下标从配送原点（0 号结点）开始算起
 
 % TODO
+% pareto_front.m
 % 该 [~, index] = min(weighted(fit, coeff));  % 找群体最优值对应下标
 % 适应度排序：采用帕累托占优方法
 % fitness 函数：性能优化，流程优化等
@@ -65,6 +66,7 @@ end
 velocity = rands(particle_cnt, field.NODE_COUNT-1);  % 初始化粒子速度
 
 fit = fitness(particle, field, matrix);  % 适应度是一个两列（T 和 Z）的矩阵
+pf = pareto_front(fit);  % 得到当前帕累托前沿
 [~, index] = min(weighted(fit, coeff));  % 找群体最优值对应下标
 p_best = particle;  % 个体最优对应的粒子群
 g_best = particle(index, :);  % 全局最优对应的粒子
