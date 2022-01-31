@@ -25,9 +25,7 @@
 % 邻接矩阵、风险矩阵的下标从配送原点（0 号结点）开始算起
 
 % TODO
-% pareto_front.m
 % 该 [~, index] = min(weighted(fit, coeff));  % 找群体最优值对应下标
-% 适应度排序：采用帕累托占优方法
 % fitness 函数：性能优化，流程优化等
 % draw_distribution 函数：流程性优化；规定参数控制一张图片放几辆车的图
 
