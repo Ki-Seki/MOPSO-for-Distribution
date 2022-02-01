@@ -23,11 +23,15 @@
 % 结点从 0 开始编号，但是 MATLAB 是从 1 开始编号的
 % TSP 背景下，适应度值即为路径长度、成本等，适应度值越小越好
 % 邻接矩阵、风险矩阵的下标从配送原点（0 号结点）开始算起
+% 群体最优 g_best 也是个粒子群，学术上应该叫做 repository
 
 % TODO
-% 该 [~, index] = min(weighted(fit, coeff));  % 找群体最优值对应下标
+% 该 draw_convergence()
 % fitness 函数：性能优化，流程优化等
 % draw_distribution 函数：流程性优化；规定参数控制一张图片放几辆车的图
+% UTF8 编码问题
+% 帕累托前沿暂时按照随机化方法
+% 动态 pf 图
 
 clear;
 clc;
@@ -38,13 +42,14 @@ close all;
 rand_type = 'state';  % 随机数类型
 rand_seed = 1;  % 随机数种子
 
-dataset = 'c21';  % 数据集名称
+dataset = 'b50';  % 数据集名称
 
-loop_cnt = 100;  % 进化次数
-particle_cnt = 30;  % 粒子数目
+loop_cnt = 600;  % 进化次数
+particle_cnt = 60;  % 粒子数目
 w = 1.5;  % 惯性权重
 c1 = 4;  % 自我学习因子
 c2 = 4;  % 群体学习因子
+repo_size = 100;  % 群体最优粒子群最大容量，建议值在 100 以内即可
 
 graph_option.detail = true;  % 是否在所有输出的图中显示详细信息
 graph_option.distrib_cnt = 2;  % 一张图中绘制多少辆车的配送方案（合法值：1，2，4，6）
@@ -52,7 +57,6 @@ graph_option.distrib_cnt = 2;  % 一张图中绘制多少辆车的配送方案�
 %% 初始化
 
 rand(rand_type, rand_seed);  % 随机数生成器初始化
-convergence = 0;  % 收敛时的迭代次数
 field = read_dataset(dataset);  % 读数据集到 field 结构体，它包含数据集中所有字段值
 draw_net(field, graph_option);  % 绘制结点网络图
 
@@ -64,13 +68,15 @@ end
 velocity = rands(particle_cnt, field.NODE_COUNT-1);  % 初始化粒子速度
 
 fit = fitness(particle, field, matrix);  % 适应度是一个两列（T 和 Z）的矩阵
-pf = pareto_front(fit);  % 得到当前帕累托前沿
-[~, index] = min(weighted(fit, coeff));  % 找群体最优值对应下标
+pf = pareto_front(fit);  % 得到当前帕累托前沿解集，是一个逻辑索引
 p_best = particle;  % 个体最优对应的粒子群
-g_best = particle(index, :);  % 全局最优对应的粒子
+g_best = particle(pf, :);  % 全局最优对应的粒子，pf 是逻辑索引
 p_best_fit = fit;  % 个体最优值
-g_best_fit = fit(index, :);  % 全局最优值
-best_history = zeros(1, loop_cnt);  % 历次迭代的全局最优的适应度值
+g_best_fit = fit(pf, :);  % 全局最优值
+
+best_history = zeros(loop_cnt, 2);  % 记录迭代：每行包括两目标每次在帕累托前沿中的平均值
+convergence.t = 0;  % T 值收敛时的迭代次数
+convergence.z = 0;  % Z 值收敛时的迭代次数
 
 %% 粒子群算法核心循环
 
@@ -81,33 +87,48 @@ for i = 1 : loop_cnt
         v = velocity(j, :);  % 当前粒子速度
         x = particle(j, :);  % 当前粒子位置
         
-        v = w * v + c1 * rand * (p_best(j, :)-x) + ...
-            c2 * rand * (g_best-x);  % 速度更新公式
+        v = w * v + c1 * rand * (p_best(j, :)-x) + c2 * rand * ...
+            (g_best(randi(size(g_best, 1)), :)-x);  % 速度更新公式
         x = x + v;  % 位置更新公式
         
-        [velocity(j, :), particle(j, :)] = validate(v, x);  % 合法化速度与位置
+        [velocity(j, :), particle(j, :)] = validate(v, x);  % 速度与位置冲编码
         
         %% 更新个体最优
         
         tmp = fitness(particle(j, :), field, matrix);
-        if weighted(tmp, coeff) <= weighted(p_best_fit(j, :), coeff)
+        if sum(tmp < p_best_fit(j, :)) == 2  % 如果新解是占优的才更新
             p_best(j, :) = particle(j, :);
             p_best_fit(j, :) = tmp;
         end
     end
     
-    %% 更新群体最优
-    [~, index] = min(weighted(p_best_fit, coeff));
-    tmp = p_best_fit(index, :);
-    if weighted(tmp, coeff) < weighted(g_best_fit, coeff)
-        g_best = p_best(index, :);
-        g_best_fit = tmp;
-        convergence = i;  % 更新收敛时的迭代次数
+    %% 更新群体最优：策略是把新粒子全部加入后，再求一遍帕累托前沿
+    g_best = [g_best; p_best];
+    g_best_fit = [g_best_fit; p_best_fit];
+    
+    pf = pareto_front(g_best_fit);  % 帕累托前沿的逻辑索引
+    
+    g_best = g_best(pf, :);
+    g_best_fit = g_best_fit(pf, :);
+    
+    %% g_best 群体大小必须在 repository 规定大小之内
+    
+    if size(g_best, 1) > repo_size
+        row_index = randperm(size(g_best, 1), repo_size);
+        g_best = g_best(row_index, :);
+        g_best_fit = g_best_fit(row_index, :);
     end
     
-    %% 保存结果
+    %% 记录迭代
     
-    best_history(i) = weighted(g_best_fit, coeff);
+    avg_fit = mean(g_best_fit);
+    best_history(i, :) = avg_fit;
+    if i==1 || best_history(i, 1)<best_history(i-1, 1)
+        convergence.t = i;
+    end
+    if i==1 || best_history(i, 2)<best_history(i-1, 2)
+        convergence.z = i;
+    end
 end
 
 %% 输出
