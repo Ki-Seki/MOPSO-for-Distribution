@@ -2,7 +2,7 @@
 % 此函数的算法依据：帕累托前沿一定是凸向坐标原点的曲线（曲面、超曲面）
 function pf = pareto_front(fit)
     % fit 适应度矩阵，每行表示一个粒子的适应度，包含 T 总时间和 Z 总成本两个元素
-    % pf 帕累托前沿解集，是一个列向量，每个元素为布尔值，若为 1 表示对应粒子在帕累托前沿上
+    % pf 帕累托前沿解集，是一个逻辑索引，每个元素为布尔值，若为 1 表示对应粒子在帕累托前沿上
     
     %% 寻找两个端点
     
@@ -24,10 +24,10 @@ function pf = pareto_front(fit)
     %% 找到两端点连线及下方解中的非支配解
     
     tmp = find(pf);
-    cnt = size(tmp, 1);
+    cnt = numel(tmp);
     for i = 1 : cnt
         for j = 1 : cnt
-            if i == j  % 跳过与自身的比较
+            if i==j || pf(tmp(j))==0  % 跳过与自身的比较，及 tmp(j) 号粒子已经被剔除的情况
                 continue;
             end
             
