@@ -20,18 +20,20 @@
 % 输出：命令行输出结果、结点网络路径图、结点网络拓扑图、PSO 收敛过程图、每辆车的配送路径图
 
 % 注意事项
-% 结点从 0 开始编号，但是 MATLAB 是从 1 开始编号的
-% TSP 背景下，适应度值即为路径长度、成本等，适应度值越小越好
-% 邻接矩阵、风险矩阵的下标从配送原点（0 号结点）开始算起
-% 群体最优 g_best 也是个粒子群，学术上应该叫做 repository
+% 结点从 0 开始编号，但是 MATLAB 是从 1 开始编号的；
+% TSP 背景下，适应度值即为路径长度、成本等，适应度值越小越好；
+% 邻接矩阵、风险矩阵的下标从配送原点（0 号结点）开始算起；
+% MOPSO 中群体最优 g_best 也是粒子群，学术上叫做 repository，
+% 本例中输入的全排列是相当离散的数据，因此 repository 大小基本在 3 个左右，
+% 其帕累托前沿图基本就是三个点组成的
 
 % TODO
-% 该 draw_convergence()
+% 完成 draw_convergence()
+% draw_pf 不是动态的
 % fitness 函数：性能优化，流程优化等
 % draw_distribution 函数：流程性优化；规定参数控制一张图片放几辆车的图
 % UTF8 编码问题
 % 帕累托前沿暂时按照随机化方法
-% 动态 pf 图
 
 clear;
 clc;
@@ -42,16 +44,15 @@ close all;
 rand_type = 'state';  % 随机数类型
 rand_seed = 1;  % 随机数种子
 
-dataset = 'b50';  % 数据集名称
+dataset = 'c21';  % 数据集名称
 
-loop_cnt = 600;  % 进化次数
-particle_cnt = 60;  % 粒子数目
+loop_cnt = 60;  % 进化次数
+particle_cnt = 30;  % 粒子数目
 w = 1.5;  % 惯性权重
 c1 = 4;  % 自我学习因子
 c2 = 4;  % 群体学习因子
-repo_size = 100;  % 群体最优粒子群最大容量，建议值在 100 以内即可
 
-graph_option.detail = true;  % 是否在所有输出的图中显示详细信息
+graph_option.detail = false;  % 是否在所有输出的图中显示详细信息
 graph_option.distrib_cnt = 2;  % 一张图中绘制多少辆车的配送方案（合法值：1，2，4，6）
 
 %% 初始化
@@ -69,6 +70,9 @@ velocity = rands(particle_cnt, field.NODE_COUNT-1);  % 初始化粒子速度
 
 fit = fitness(particle, field, matrix);  % 适应度是一个两列（T 和 Z）的矩阵
 pf = pareto_front(fit);  % 得到当前帕累托前沿解集，是一个逻辑索引
+figure('Name','帕累托前沿图','NumberTitle','off'); % 这个未放在函数中，是为了让图可以成为动图
+draw_pf(fit, pf, graph_option);  % 绘制帕累托前沿
+
 p_best = particle;  % 个体最优对应的粒子群
 g_best = particle(pf, :);  % 全局最优对应的粒子，pf 是逻辑索引
 p_best_fit = fit;  % 个体最优值
@@ -107,17 +111,10 @@ for i = 1 : loop_cnt
     g_best_fit = [g_best_fit; p_best_fit];
     
     pf = pareto_front(g_best_fit);  % 帕累托前沿的逻辑索引
+    draw_pf(g_best_fit, pf, graph_option);  % 绘制帕累托前沿
     
     g_best = g_best(pf, :);
     g_best_fit = g_best_fit(pf, :);
-    
-    %% g_best 群体大小必须在 repository 规定大小之内
-    
-    if size(g_best, 1) > repo_size
-        row_index = randperm(size(g_best, 1), repo_size);
-        g_best = g_best(row_index, :);
-        g_best_fit = g_best_fit(row_index, :);
-    end
     
     %% 记录迭代
     
