@@ -39,16 +39,4 @@ function pf = pareto_front(fit)
             end
         end
     end
-    
-    %% 用于测试的绘图
-    
-    scatter(fit(:, 1), fit(:, 2));
-    hold on;
-    plot([x1,x2], [y1, y2]);
-    xlabel('目标 1：T');
-    ylabel('目标 2：Z');
-    tmp = find(pf);
-    tmp = fit(tmp',:);
-    scatter(tmp(:, 1), tmp(:, 2), 'g');
-    hold off;
 end
