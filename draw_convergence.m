@@ -12,11 +12,11 @@ function draw_convergence(f, conv, field)
     subplot(2, 1, 1);
     plot(f(:, 1), '- .r');
     hold on;
-    pt = plot(conv.t, f(conv.t, 1), 'or');
-    labelt = [' (' num2str(conv.t) ', ' num2str(f(conv.t, 1)) ')'];  % 收敛点的标签
+    pt = plot(conv, f(conv, 1), 'or');
+    labelt = [' (' num2str(conv) ', ' num2str(f(conv, 1)) ')'];  % 收敛点的标签
     
     xlabel('迭代次数');
-    ylabel('目标 1：T（小时）');
+    ylabel('平均时间（小时）');
     legend(pt, ['收敛点' labelt]);
     hold off;
     
@@ -25,11 +25,11 @@ function draw_convergence(f, conv, field)
     subplot(2, 1, 2);
     plot(f(:, 2), '- .r');
     hold on;
-    pz = plot(conv.z, f(conv.z, 2), 'or');
-    labelz = [' (' num2str(conv.z) ', ' num2str(f(conv.z, 2)) ')'];  % 收敛点的标签
+    pz = plot(conv, f(conv, 2), 'or');
+    labelz = [' (' num2str(conv) ', ' num2str(f(conv, 2)) ')'];  % 收敛点的标签
     
     xlabel('迭代次数');
-    ylabel('目标 2：Z（元）');
+    ylabel('平均成本（元）');
     legend(pz, ['收敛点' labelz]);
     hold off;
 end

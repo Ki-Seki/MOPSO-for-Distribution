@@ -1,10 +1,9 @@
 % 绘制某个粒子代表的配送方案
 function draw_distribution(p, v, field)
     % p 最优粒子
-    % v 车辆配送方案，元胞数组
+    % v 车辆配送方案，行向量，每个元素代表一辆车，元素值是该车服务需求点数
     % field 数据集
     
-    v = v{1};  % 提取需要的部分
     g = graph(create_matrix(field.NODE, field.EDGE, 0));  % 创建图对象
     st = 1;  % 某辆车起始服务点，p(st) 是服务点编号
     for i = 1 : size(v, 2)  % 遍历每辆车
