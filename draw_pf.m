@@ -7,26 +7,36 @@ function draw_pf(fit, pf, field, graph_option)
     
     figure('Name','帕累托前沿','NumberTitle','off');
     
-    scatter(fit(pf, 1), fit(pf, 2), 'r');  % 绘制前沿上的点
+    %% 绘制非支配解散点图
+    
+    scatter(fit(pf, 1), fit(pf, 2), 'r');
     xlabel('目标 1：T（小时）');
     ylabel('目标 2：Z（元）');
     title(['帕累托前沿图（数据集：', field.DATASET, '）']);
     
-    % 为非支配解添加标签
-    tmp = fit(pf, :);
-    cnt = size(tmp, 1);
+    %% 为非支配解添加标签
+    
+    p = fit(pf, :);  % 获取非支配解解集
+    cnt = size(p, 1);
     for i = 1 : cnt
-        label = ['(' num2str(tmp(i, 1)) ',' num2str(tmp(i, 2)) ') '];
-        offset = 1;
-        text(tmp(i, 1), tmp(i, 2)+offset, label);
+        t = num2str(round(p(i, 1), 2));  % 保留两位小数，转换为字符串
+        z = num2str(round(p(i, 2), 2));
+        label = ['(' t ',' z ') '];
+        offset = 1.005;  % 为了不让标签盖住坐标点，添加偏置
+        text(p(i, 1)*offset, p(i, 2)*offset, label);
     end
     
+    %% 绘制帕累托前沿曲线
+    
+    p = sortrows(p, 1);  % 按首列（时间）进行升序排序
+    hold on, plot(p(:,1), p(:,2)), hold off;
+    
+    %% 选择性详细绘图
+    
     if graph_option.detail == true
-        hold on;
-        scatter(fit(~pf, 1), fit(~pf, 2), 'r.');  % 绘制其他点
-        hold off;
-        legend('非支配解（时间，成本）', '被支配解');
+        hold on, scatter(fit(~pf, 1), fit(~pf, 2), 'r.'), hold off;  % 绘制被支配解
+        legend('非支配解（时间，成本）', '帕累托前沿', '被支配解');
     else
-        legend('非支配解（时间，成本）');
+        legend('非支配解（时间，成本）', '帕累托前沿');
     end
 end
