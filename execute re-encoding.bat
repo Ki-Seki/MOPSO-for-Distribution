@@ -1,0 +1,1 @@
+powershell .\re-encoding.ps1
