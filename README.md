@@ -55,7 +55,7 @@ This code is a part of a HUEL master degree project under the protection of GPL-
 
 |名称|类型|作用|链接|
 |--|--|--|--|
-|`MOPSO说明与使用`|在线视频|包含对 MOPSO 的使用、算法、数据集的介绍|[Loom](https://www.loom.com/share/folder/5ee40289950a4896a24e5c6392fdca02)|
+|`MOPSO说明与使用`|在线视频|包含对 MOPSO 的使用、算法、数据集的介绍|[Loom](https://loom.com/share/folder/5ee40289950a4896a24e5c6392fdca02)|
 |`优化MOPSO算法流程图`|在线流程图|MOPSO 的 `main.m` 程序的流程图的在线查看版本|[ProcessOn](https://www.processon.com/view/link/6201fb816376890390d1dd07)|
 
 ## 3. 使用
