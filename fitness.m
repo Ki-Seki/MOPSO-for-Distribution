@@ -1,4 +1,4 @@
-% 多目标适应度函数，计算粒子群 p 的配送总时间和总成本
+% 多目标适应度函数，计算粒子群 particle 的配送总时间和总成本
 function [fit, vehicle, dist, risk] = fitness(particle, field, matrix)
     % particle 粒子群，每行是一个粒子（允许只有一个粒子）
     % field 数据集
