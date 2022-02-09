@@ -1,7 +1,7 @@
 % 用改进后的多目标粒子群优化（MOPSO）算法解决带有风险矩阵的多辆车配送旅行商问题（TSP）
 
 % -*- coding: utf-8 -*-
-% @Time: 
+% @Time: 2022/02/09 20:57
 % @Author: Song Shichao
 % @Email: song.shichao@outlook.com
 % @Software: Matlab R2015b
@@ -10,7 +10,7 @@
 % @RAM: 16.0 GB
 % @Notice: This code is a part of a HUEL master degree project 
 %          under the protection of GPL-3.0-only license.
-% @Link: https://github.com/Ki-Seki/MATLAB/tree/master/006
+% @Link: https://github.com/Ki-Seki/MOPSO-for-Distribution
 
 % 算法特色
 % 多目标粒子群优化（MOPSO）、风险矩阵、适应度矩阵、速度与位置的重编码、帕累托前沿

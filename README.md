@@ -22,9 +22,9 @@
 
 ## 1. 项目说明
 
-此代码是河南财经政法大学硕士项目的一部分，受 GPL-3.0-only 开源协议保护。GitHub 地址：https://github.com/Ki-Seki/MATLAB/tree/master/006
+此代码是河南财经政法大学硕士项目的一部分，受 GPL-3.0-only 开源协议保护。GitHub 地址：https://github.com/Ki-Seki/MOPSO-for-Distribution
 
-This code is a part of a HUEL master degree project under the protection of GPL-3.0-only license. GitHub Link: https://github.com/Ki-Seki/MATLAB/tree/master/006
+This code is a part of a HUEL master degree project under the protection of GPL-3.0-only license. GitHub Link: https://github.com/Ki-Seki/MOPSO-for-Distribution
 
 ## 2. 资源
 
@@ -72,9 +72,9 @@ This code is a part of a HUEL master degree project under the protection of GPL-
 
 MATLAB 对文件的编码遵照系统默认编码格式（GB 2312）。而本项目包括本文件都是 UTF-8 编码的。为了解决这一冲突，提供如下方法（仅在 Windows 平台可用）：
 
-* 在文件管理器中打开文件夹 `006`，双击运行 `execute re-encoding.m` 文件
-* 这会生成与 `006` 文件夹同级的文件夹 `encoded` ，它包含重新编码后的文件
-* 在 MATLAB 中打开 `encoded` 文件夹即可
+* 在文件管理器中打开本文件夹，双击运行 `execute re-encoding.m` 文件
+* 这会生成与本文件夹同级的文件夹 `encoded` ，它包含重新编码后的文件
+* 在 MATLAB 中打开 `encoded` 文件夹即可，其中的文件均采用系统默认编码格式
 
 ## 4. 算法
 
