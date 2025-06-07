@@ -152,5 +152,3 @@ GB/T 7714-2015 格式：
 ```
 [1]宋世超.用改进后的多目标粒子群优化（MOPSO）算法解决带有风险矩阵的多辆车配送旅行商问题（TSP）[CP].GitHub[2022].https://github.com/Ki-Seki/MOPSO-for-Distribution.
 ```
-
-[![Powered by DartNode](https://dartnode.com/branding/DN-Open-Source-sm.png)](https://dartnode.com "Powered by DartNode - Free VPS for Open Source")
